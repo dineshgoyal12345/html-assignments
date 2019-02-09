@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>
+		Sign up form
+	</title>
+	<meta charset="utf-8"/>
+</head>
+<link rel="stylesheet" type="text/css" href="signup.css">
+<body>
+	<div class="fields">
+		<form name="form" method="GET">
+			<div class="nameA">
+			<div class="namea">
+				<h1>Name:</h1>
+				<input type="text"  id="name">
+			</div>
+			<div class="nameb">
+				<h3 id="v_name" style="display: none;">Invalid Name</h3>
+			</div>
+			</div>
+			<div id="age">
+				<div class="agea">
+				<h1>Age</h1>
+				<input type="text" id="age_a">
+				</div>
+				<h3 id="v_age" style="display: none;">Invalid Age</h3>
+			</div>
+			<div class="gender">
+				<h1>Gender</h1>
+				<div class="gen_choice">
+					<div></div>
+				<input type="radio" class ="gen" value="male" checked="checked"><h1>Male</h1>
+				<input type="radio" class="gen" value="female"><h1>Female</h1>
+				</div> 
+			</div>
+			<div id ="mobile">
+				<div class="mobilea">
+				<h1>Mobile no.</h1>
+				<input type="text" id="mobile_num">
+				</div>
+				<h3 id="v_mobile" style="display: none;">Invalid mobile number</h3>
+			</div>
+			<div class="email">
+				<div class="emaila">
+				<h1>Email:</h1>
+				<input type="text" id="email_id">
+				</div>
+				<h3 id="v_email" style="display: none;">Invalid Email ID</h3>
+			</div>
+			<div class="password">
+				<h1>Password</h1>
+				<input type="password" id="password1">
+			</div>
+			<div class="confirm_pass">
+				<div class="paasa">
+				<h1>Confirm Password</h1>
+				<input type="password" id="password2">
+				</div>
+				<h3 id="v_password" style="display: none;">confirm password sholud be same as initial password</h3>
+			</div>
+
+			<div class="citya">
+				<div class="cityb">
+				<h1>City</h1>
+				<input type="text"  id="city">
+				</div>
+				<h3 id="v_city" style="display: none;">Invalid City Name</h3>
+			</div>
+			
+			<div class="education">
+				<h1>Educational qualifications</h1>
+				<select>
+					<option value="Btech">Btech</option>
+					<option value="Bsc">Bsc</option>
+					<option value="Msc">Msc</option>
+					<option value="Mtech">Mtech</option>
+				</select>
+			</div>
+		</form>
+		<div class="btn">
+		<button type="submit" onclick="verify()" value="submit">Submit</button>
+		</div>
+	</div>
+	</body>
+	<script type="text/javascript">
+		
+		function check_mobile(phone)
+		{   var number= /^[6-9]\d{9}$|^0[6-9]\d{9}$/;
+
+		return (number.test(phone.value));
+	}
+	function check_age(age)
+	{
+		var Age_a= /^[1-8]\d$/;
+		return(Age_a.test(age.value));
+	}
+
+	function check_email(email)
+	{
+		var email_id = /^\w+@\w{2}\.iitr\.ac\.in$/;
+		return(email_id.test(email.value));
+	}
+
+	function check_password(pass1,pass2)
+	{
+		if(pass1.value==pass2.value&&pass1.value!="")
+			return true;
+		else
+			return false;
+	}
+	function check_city(city_name)
+	{
+		var city_n= /^[a-zA-z]+$/;
+		return(city_n.test(city_name.value));
+	}
+
+	function check_name(name)
+	{
+		var name_n= /^[a-zA-z]+$/;
+		return(name_n.test(name.value));
+	}
+	function verify()
+	{var flag=1;
+		if(check_mobile(document.getElementById("mobile_num"))==false)
+		{  
+			document.getElementById("v_mobile").style.display = "block";
+			flag=0;
+		}
+		if(check_age(document.getElementById("age_a"))==false)
+		{ 
+			document.getElementById("v_age").style.display = "block";
+			flag=0;
+		}
+		if(check_email(document.getElementById("email_id"))==false)
+		{
+			document.getElementById("v_email").style.display = "block";
+			flag=0;
+		}
+		if(check_password(document.getElementById("password1"),document.getElementById("password2"))==false)
+		{
+			document.getElementById("v_password").style.display = "block";
+			flag=0;
+		}
+		if(check_city(document.getElementById("city"))==false)
+		{
+			document.getElementById("v_city").style.display = "block";
+			flag=0;
+		}
+		if(check_name(document.getElementById("name"))==false)
+			{   flag=0;
+				document.getElementById("v_name").style.display = "block";
+			}
+
+			var z=document.getElementById("email_id");
+
+			if(flag==1)
+			{
+				makeRequest(z);
+
+				function makeRequest(email) {
+					httpRequest = new XMLHttpRequest();
+					var emailid=email.value;
+
+					if (!httpRequest) {
+						alert('Giving up :( Cannot create an XMLHTTP instance');
+						return false;
+					}
+					httpRequest.open("POST","http://172.25.55.8:3000/my_machau_api",true);
+					httpRequest.setRequestHeader('Content-Type', 'application/JSON');
+					httpRequest.send(JSON.stringify({
+						email:emailid,
+					}));
+					httpRequest.onload = function(){    alert(flag);
+
+						console.log(httpRequest.response)
+						alert(JSON.parse(httpRequest.response).response.message)
+					}
+				}
+			}
+		}
+	</script>
+
+</html>
